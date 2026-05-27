@@ -70,7 +70,7 @@ class PgVectorDB(VectorDB):
     def disk_size_mb(self) -> float:
         conn = self._connect()
         row = conn.execute(
-            "SELECT pg_total_relation_size($1) / 1024.0 / 1024.0", (TABLE,)
+            "SELECT pg_total_relation_size(%s::regclass) / 1024.0 / 1024.0", (TABLE,)
         ).fetchone()
         return float(row[0]) if row else 0.0
 

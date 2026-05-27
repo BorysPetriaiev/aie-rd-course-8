@@ -42,12 +42,12 @@ class QdrantDB(VectorDB):
         self._ids = list(ids)
 
     def search(self, query_vec: np.ndarray, top_k: int = 10) -> List[Tuple[str, float]]:
-        results = self._client.search(
+        results = self._client.query_points(
             collection_name=COLLECTION,
-            query_vector=query_vec.astype(np.float32).tolist(),
+            query=query_vec.astype(np.float32).tolist(),
             limit=top_k,
         )
-        return [(hit.payload["doc_id"], hit.score) for hit in results]
+        return [(hit.payload["doc_id"], hit.score) for hit in results.points]
 
     def disk_size_mb(self) -> float:
         info = self._client.get_collection(COLLECTION)
